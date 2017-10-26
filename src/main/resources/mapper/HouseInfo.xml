@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.house.dao.HouseInfoDao">
+	
+	<select id="getHouseInfoList" resultType="HouseInfo">
+		SELECT *
+		FROM t_house_info
+		WHERE 1=1
+		<if test="houseType!=0">
+			AND	house_type = #{houseType}
+		</if>
+		<if test="isBest==1">
+			AND	isbest = #{isBest}
+		</if>
+		<if test="isTuijian==1">
+			AND	isTuijian = #{isTuijian}
+		</if>
+		<if test="houseName!=null and houseName!=''">
+			AND name LIKE CONCAT(CONCAT('%', #{houseName}), '%')
+		</if>
+		ORDER BY create_date desc
+		LIMIT #{offset},#{limit}
+	</select>
+	
+	
+	<insert id="addHouseInfo" parameterType="HouseInfo">
+
+		INSERT INTO t_house_info(
+			name, small_photo, detail_photo, labels,
+			house_address, area, green,
+			parknum, years, sale_address, area_covered,
+			plotratio, houses,
+			decoration, property, house_type, create_user,
+			create_date, home_type,phone,description,price,discount)
+		VALUES(
+			#{name},#{smallPhoto},#{detailPhoto},#{labels},
+			#{houseAddress},#{area},#{green},
+			#{parkNum},#{years},#{saleAddress},#{areaCovered},
+			#{plotRatio},#{houses},
+			#{decoration},#{property},#{houseType},#{createUser},
+			#{createDate},#{homeType},#{phone},#{description},#{price},#{discount})
+			
+	</insert>
+	
+	<select id="getHouseInfoSum" resultType="int">
+		SELECT COUNT(*) FROM t_house_info WHERE 1=1
+		<if test="houseType!=0">
+			AND	house_type = #{houseType}
+		</if>
+		<if test="isBest==1">
+			AND	isbest = #{isBest}
+		</if>
+		<if test="isTuijian==1">
+			AND	isTuijian = #{isTuijian}
+		</if>
+		<if test="houseName!=null and houseName!=''">
+			AND name LIKE CONCAT(CONCAT('%', #{houseName}), '%')
+		</if>
+		ORDER BY create_date desc
+	</select>
+	
+	
+	<delete id="deleteHouseInfo" parameterType="int">
+		DELETE FROM  t_house_info WHERE id= #{houseId};
+	</delete>
+	
+	
+	<select id="getHouseInfoById" resultType="HouseInfo" parameterType="int">
+		SELECT *
+		FROM t_house_info
+		WHERE id = #{id}
+	</select>
+	
+	<update id="setHouseBest">
+	
+			update t_house_info set isbest=#{isBest} where id=#{id}
+	
+	</update>
+	
+	<update id="setHouseTuijian">
+	
+		update t_house_info set istuijian=#{isTuijian} where id=#{id}
+	
+	</update>
+	
+	
+	<update id="updateHouse" parameterType="HouseInfo">
+
+		UPDATE t_house_info
+		SET 
+			name = #{name},
+			labels = #{labels} ,
+			house_address = #{houseAddress},
+			area = #{area},
+			green = #{green},
+			parknum = #{parkNum},
+			years = #{years},
+			sale_address = #{saleAddress},
+			area_covered = #{areaCovered},
+			plotratio = #{plotRatio},
+			houses = #{houses},
+			decoration =#{decoration},
+			property= #{property},
+			house_type =#{houseType},
+			home_type =#{homeType},
+			phone =#{phone},
+			description = #{description},
+			price = #{price},
+			discount =#{discount}
+		WHERE id = #{id}
+	
+	</update>
+	
+	<insert id="saveNews" parameterType="NewsInfo">
+		insert into t_news(title,contents,about,createTime,createUserName) value (#{title},#{contents},#{about},#{createTime},#{createUserName})
+	</insert>
+	
+	
+	<select id="getNewsInfoByPage" resultType="NewsInfo">
+		select * from t_news where 1=1
+		<if test="title!=null and title!=''">
+			and title LIKE CONCAT(CONCAT('%', #{title}), '%')
+		</if>
+		ORDER BY createtime desc
+		LIMIT #{offset},#{limit} 
+	</select>
+	
+	<select id="getNewsInfoSum" resultType="int">
+		select count(*) from t_news where 1=1
+		<if test="title!=null and title!=''">
+			and title LIKE CONCAT(CONCAT('%', #{title}), '%')
+		</if>
+	</select>
+	
+	<select id="getNewsInfoById" parameterType="int" resultType="NewsInfo">
+		select * from t_news where id = #{id}
+	</select>
+	
+	<delete id="deleteNewsInfo" parameterType="int">
+		delete from t_news where id = #{id}
+	</delete>
+	
+	<update id="updateNewsInfo" parameterType="NewsInfo">
+		update t_news set title = #{title},contents=#{contents},about=#{about} where id=#{id}
+	</update>
+</mapper>

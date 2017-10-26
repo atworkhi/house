@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>   
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.dao.HouseTopDao">
+	
+	<select id="getBestHouse" resultType="HouseInfo">
+		SELECT * FROM t_house_info
+		WHERE isbest=1
+	</select>
+	
+	<select id="getTuijianHouse" resultType="HouseInfo">
+		SELECT * FROM t_house_info
+		WHERE istuijian=1 AND
+		house_type = #{houseType}
+		ORDER BY create_date desc
+	</select>
+
+
+	<select id="getHouseList" resultType="HouseInfo">
+		SELECT *
+		FROM t_house_info
+		WHERE 1=1
+		AND house_type = #{houseType}
+		ORDER BY create_date desc
+		<if test="offset!=null and limit!=null">
+			LIMIT #{offset},#{limit}
+		</if>
+	</select>
+
+	<select id="getHouseCount" resultType="int">
+		SELECT COUNT(*) FROM t_house_info 
+		WHERE 1=1
+		AND house_type = #{houseType}
+		ORDER BY create_date desc
+	</select>
+	
+	
+	<select id="getHouseInfoById" resultType="HouseInfo">
+		SELECT *
+		FROM t_house_info
+		WHERE id = #{id}
+	</select>
+	
+
+</mapper>
